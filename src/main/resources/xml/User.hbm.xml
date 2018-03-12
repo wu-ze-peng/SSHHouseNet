@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.accp.entity.User" table="users">
+        <id name="id" column="id">
+            <generator class="sequence">
+                <param name="sequence">seq_user_id</param>
+            </generator>
+        </id>
+        <property name="name" column="name"/>
+        <property name="password" column="password"/>
+        <property name="username" column="username"/>
+        <property name="telephone" column="telephone"/>
+        <property name="isadmin" column="isadmin"/>
+        <set name="houses">
+            <key column="user_id"/>
+            <one-to-many class="com.accp.entity.House"/>
+        </set>
+    </class>
+</hibernate-mapping>

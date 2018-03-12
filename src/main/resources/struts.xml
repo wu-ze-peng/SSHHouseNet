@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+    <constant name="struts.i18n.encoding" value="UTF-8"/>
+    <package name="web" extends="struts-default,json-default">
+        <!--设置拦截器-->
+        <interceptors>
+            <!--定义自义定的拦截器-->
+            <interceptor name="myinterceptor" class="com.accp.interceptor.LoginInterceptor"/>
+            <!-- 定义一个包含权限检查的拦截器栈 -->
+            <interceptor-stack name="mystack">
+                <!-- 定义拦截器栈包含myinterceptor拦截器栈 -->
+                <interceptor-ref name="myinterceptor"></interceptor-ref>
+                <interceptor-ref name="defaultStack"></interceptor-ref>
+            </interceptor-stack>
+        </interceptors>
+
+        <!--定义了默认的拦截器-->
+        <default-interceptor-ref name="mystack"/>
+        <!--定义了默认的action-->
+        <default-action-ref name="defualt"/>
+        <!--定义了一个全局结果,拦截器返回为login时跳转到登录页面-->
+        <global-results>
+            <result name="login" type="redirect">login_struts2.jsp</result>
+        </global-results>
+
+
+
+        <action name="defualt" method="struts-default">
+            <result>login_struts2.jsp</result>
+        </action>
+        <action name="user*" class="com.accp.action.UserAction" method="user{1}">
+            <!--注册成功到注册成功页面-->
+            <result name="success">/WEB-INF/page/success.jsp</result>
+            <!--登录跳转到管理页面-->
+            <result name="manage" type="redirectAction">house</result>
+                <!--&lt;!&ndash;要跳转的action名称&ndash;&gt;-->
+                <!--<param name="actionName">house</param>-->
+                <!--&lt;!&ndash;传递的参数,userID是在登录时获取的user对象下的id&ndash;&gt;-->
+                <!--<param name="userid">${user.id}</param>-->
+                <!--&lt;!&ndash;调用的action下的方法&ndash;&gt;-->
+                <!--<param name="method">getHouseList</param>-->
+
+            <!--登录失败跳转到登录页面-->
+            <result name="input">login_struts2.jsp</result>
+            <result name="error">login_struts2.jsp</result>
+            <!--注册失败跳转到注册页面-->
+            <result name="register">/WEB-INF/page/register.jsp</result>
+            <!--指定了默认拦截器后在action中可省略,如果有指定的专用拦截器就必须指定-->
+            <!--<interceptor-ref name="mystack"/>-->
+        </action>
+        <action name="house" class="com.accp.action.HouseAction" method="getHouseList">
+            <result name="success">/WEB-INF/page/manage.jsp</result>
+        </action>
+        <action name="*House" class="com.accp.action.HouseAction" method="{1}House">
+            <result name="toAdd">/WEB-INF/page/add.jsp</result>
+            <result name="success">/WEB-INF/page/success2.jsp</result>
+            <result name="input">/WEB-INF/page/add.jsp</result>
+        </action>
+
+        <action name="district" class="com.accp.action.DistrictAction" method="getDistrictList">
+            <result type="json">result</result>
+        </action>
+        <action name="street" class="com.accp.action.StreetAction" method="getStreetList">
+            <result type="json">result</result>
+        </action>
+        <action name="type" class="com.accp.action.TypeAction" method="getTypeList">
+            <result type="json">result</result>
+        </action>
+    </package>
+</struts>
